@@ -56,7 +56,7 @@ def main_worker(gpu, ngpus_per_node, config):
     
     encoder = Encoder(config.projector_type, config.projector_dims).to(device)
     predictor = Predictor(config.projector_dims[-1], config.latent_dim).to(device)
-    latent_generator = LatentGenerator(config.projector_dims[-1], config.hidden_dim, config.num_layers, config.latent_dim)
+    latent_generator = LatentGenerator(config.projector_dims[-1], config.hidden_dim, config.num_layers, config.latent_dim).to(device)
 
     encoder = torch.nn.SyncBatchNorm.convert_sync_batchnorm(encoder)
     predictor = torch.nn.SyncBatchNorm.convert_sync_batchnorm(predictor)
