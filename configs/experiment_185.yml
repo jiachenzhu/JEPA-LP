@@ -1,0 +1,13 @@
+comment: JEPA_LP_185_1brl_64_128_128_512_1024_4_1_sim_coeff_6.25_std_coeff_6.25_lr_2.4
+hidden_dim: 1024
+latent_dim: 512
+num_layers: 4
+num_steps: 1
+projector_dims:
+- 64
+- 128
+- 128
+projector_type: 1brl
+sim_coeff: 6.25
+start_lr: 2.4
+std_coeff: 6.25

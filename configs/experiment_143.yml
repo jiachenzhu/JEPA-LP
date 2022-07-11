@@ -1,0 +1,13 @@
+comment: JEPA_LP_143_1brl_64_128_128_256_1024_4_8_sim_coeff_6.25_std_coeff_12.5_lr_0.6
+hidden_dim: 1024
+latent_dim: 256
+num_layers: 4
+num_steps: 8
+projector_dims:
+- 64
+- 128
+- 128
+projector_type: 1brl
+sim_coeff: 6.25
+start_lr: 0.6
+std_coeff: 12.5

@@ -1,0 +1,13 @@
+comment: JEPA_LP_102_1brl_64_128_128_256_1024_4_4_sim_coeff_6.25_std_coeff_25.0_lr_0.3
+hidden_dim: 1024
+latent_dim: 256
+num_layers: 4
+num_steps: 4
+projector_dims:
+- 64
+- 128
+- 128
+projector_type: 1brl
+sim_coeff: 6.25
+start_lr: 0.3
+std_coeff: 25.0
