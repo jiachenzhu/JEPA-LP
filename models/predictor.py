@@ -18,9 +18,9 @@ class Predictor(nn.Module):
         predictor = self.predictor_dictionary(latent_variable).view(n, c, c)
 
         # predictions = []
-        next_state = initial_state
+        next_state = initial_state[:, :-num_steps]
         for i in range(num_steps):
-            next_state = torch.einsum("nlc,ncb->nlb", next_state[:, :-num_steps], predictor)
+            next_state = torch.einsum("nlc,ncb->nlb", next_state, predictor)
             # predictions.append(next_state)
 
         return next_state, next_state_ground_true
