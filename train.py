@@ -14,7 +14,7 @@ from scheduler import Scheduler
 from loss import VICRegLossModule
 
 def main():
-    parser = argparse.ArgumentParser(description='RandomMask')
+    parser = argparse.ArgumentParser(description='JEPA')
     parser.add_argument('config_paths', nargs='+')
     args = parser.parse_args()
     config = read_config(args.config_paths)
@@ -135,18 +135,28 @@ def main_worker(gpu, ngpus_per_node, config):
             representation = encoder(x)
             representation = rearrange(representation, "b c h w -> b h w c")
             representation_right = rearrange(representation, "b h w c -> (b h) w c")
+            representation_left = torch.flip(representation_right, [1,])
             representation_down = rearrange(representation, "b h w c -> (b w) h c")
+            representation_up = torch.flip(representation_down, [1,])
             
             # representation shape b, c, h, w
             # right, down
             latent_right = latent_generator(representation_right)
+            latent_left = latent_generator(representation_left)
             latent_down = latent_generator(representation_down)
+            latent_up = latent_generator(representation_up)
 
             prediction_right, ground_true_right = predictor(representation_right, latent_right, config.num_steps)
+            prediction_left, ground_true_left = predictor(representation_left, latent_left, config.num_steps)
             prediction_down, ground_true_down = predictor(representation_down, latent_down, config.num_steps)
+            prediction_up, ground_true_up = predictor(representation_up, latent_up, config.num_steps)
             
-            loss = loss_module(representation, prediction_right, ground_true_right, prediction_down, ground_true_down, config.sim_coeff, config.std_coeff, config.cov_coeff)
+            loss = loss_module(representation, prediction_right, ground_true_right, prediction_left, ground_true_left, prediction_down, ground_true_down, prediction_up, ground_true_up, config.sim_coeff, config.std_coeff, config.cov_coeff)
 
+            if loss.isnan().sum() > 0:
+                print("loss is nan")
+                exit()
+            
             loss.backward()
             optimizer.step()
 

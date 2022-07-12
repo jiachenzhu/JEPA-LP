@@ -31,10 +31,13 @@ class VICRegLossModule:
     def __init__(self):
         self.loss_meter = AverageMeter()
 
-    def __call__(self, representation, prediction_right, ground_true_right, prediction_down, ground_true_down, sim_coeff, std_coeff, cov_coeff):
+    def __call__(self, representation, prediction_right, ground_true_right, prediction_left, ground_true_left, prediction_down, ground_true_down, prediction_up, ground_true_up, sim_coeff, std_coeff, cov_coeff):
         world_size = torch.distributed.get_world_size()
 
-        repr_loss = F.mse_loss(prediction_right, ground_true_right.detach()) / 2 + F.mse_loss(prediction_down, ground_true_down.detach()) / 2
+        repr_loss = F.mse_loss(prediction_right, ground_true_right.detach()) / 4 + \
+                    F.mse_loss(prediction_left, ground_true_left.detach()) / 4 + \
+                    F.mse_loss(prediction_down, ground_true_down.detach()) / 4 + \
+                    F.mse_loss(prediction_up, ground_true_up.detach()) / 4
 
         x = rearrange(representation, "b h w c -> (b h w) c")
 
